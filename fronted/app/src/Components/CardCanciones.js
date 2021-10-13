@@ -11,17 +11,15 @@ const CardCanciones = () => {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const toggle = () => setIsOpen(!isOpen);
-    
 
     const [data , setData ] = useState([]);
-
+    const [resena , setResena ] = useState([]);
+    const [id , setId ] = useState([]);
 
     const getAllCanciones = async () => {
         const data = await fetch('http://localhost:3001/allCanciones')
         const canciones = await data.json()
         setData(canciones);
-      
     }
 
     useEffect(() => {
@@ -29,7 +27,46 @@ const CardCanciones = () => {
         
     }, [])
 
-   console.log(data)
+
+    const getResenaByCancion = async (id) => {
+
+        const data = await fetch('http://localhost:3001/ResenaByIdCancion/' + id)
+        const resenas = await data.json()
+
+        setResena(resenas)
+
+    }
+
+    const setResenaClick = () => {
+        
+
+
+
+        setIsOpen(!isOpen)
+    }
+
+    
+    const handleChange = (e) => {
+
+        const valueSelect = e.target.value
+        
+
+        data.map( cancion => {
+            if(cancion.nombre == valueSelect ){
+                
+                setId(cancion.idCancion)
+            }
+        })
+        
+        
+        getResenaByCancion(parseInt(id));
+            
+       console.log(resena)
+       
+        
+    }
+
+   
    
 
     return (
@@ -48,22 +85,26 @@ const CardCanciones = () => {
                 <div className='col'>
                         <FormGroup className='selectEstilo'>
                         <Label for="exampleSelect">Seleccione una canción</Label>
-                            <Input type="select" name="select" id="exampleSelect">
+                            <Input onChange={handleChange} type="select" name="select" id="exampleSelect">
                             {
                             data.map( card => (
-                                <option key={card.idCancion}>{card.nombre}</option>   
+                                <option id={card.idCancion} key={card.idCancion}>{card.nombre}</option>   
                             ))
                         }
                             </Input>
                     </FormGroup>
                
 
-                   <Button className='resenasButton'  color="primary" onClick={toggle} >Toggle</Button>
+                   <Button className='resenasButton'   color="primary" onClick={setResenaClick} >Toggle</Button>
                    <Collapse isOpen={isOpen}>
                    <ListGroup>
-                        <ListGroupItem className="justify-content-between">Cras justo odio <Badge pill>14</Badge></ListGroupItem>
-                        <ListGroupItem className="justify-content-between">Dapibus ac facilisis in <Badge pill>2</Badge></ListGroupItem>
-                        <ListGroupItem className="justify-content-between">Morbi leo risus <Badge pill>1</Badge></ListGroupItem>
+                       {
+                           resena.map( resen => (
+                                <ListGroupItem className="justify-content-between">{resen.comentario}</ListGroupItem>
+                           ))
+                       }
+                        
+                        
                     </ListGroup>
                 </Collapse>
                 </div>

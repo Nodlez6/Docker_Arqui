@@ -46,7 +46,7 @@
 .zoom {
 
   transition: transform .2s; /* Animation */
- 
+
 }
 
 .zoom:hover {
