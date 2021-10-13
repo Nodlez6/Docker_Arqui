@@ -46,8 +46,6 @@ const getAllCanciones = async (req , res ) => {
 }
 
 const getResenaByIdCancion = async (req , res ) => {
-
-    
     try {
         const id  = req.params.id;
         const respuesta = await pool.query('SELECT * FROM  resenas WHERE "FK_Cancion"=$1', [id])
@@ -57,9 +55,36 @@ const getResenaByIdCancion = async (req , res ) => {
         res.status(error.respuesta.status)
         return res.send(error.message);
     }
-    
-    
 }
+
+const deleteResena = async (req , res ) => {
+    try {
+        const id  = req.params.id;
+        const respuesta = await pool.query('DELETE FROM resenas WHERE "idResena"=$1', [id])
+        res.status(200).json(respuesta.rows);
+    }
+    catch(error){
+        res.status(error.respuesta.status)
+        return res.send(error.message);
+    }
+}
+
+
+const updateResena = async (req , res ) => {
+    try {
+        const id  = req.params.id;
+        const { puntuacion , comentario } = req.body;
+        console.log(req.body)
+        const respuesta = await pool.query('UPDATE resenas set "puntuacion"=$1,"comentario"=$2  WHERE "idResena"=$3', [puntuacion,comentario,id])
+        res.status(200).json(respuesta.rows);
+    }
+    catch(error){
+        res.status(error.respuesta.status)
+        
+        return res.send(error.message);
+    }
+}
+
 
 
 
@@ -80,5 +105,7 @@ module.exports = {
     createResena,
     getAllResenas,
     getAllCanciones,
-    getResenaByIdCancion
+    getResenaByIdCancion,
+    deleteResena,
+    updateResena
 }
