@@ -25,15 +25,15 @@ services:
       - POSTGRES_PASSWORD=12345
       - POSTGRES_DB=postgres
       - POSTGRES_HOST=db
-  #fronted:
-    #container_name: fronted
-    #restart: always
-    #build:
-    #  context: ./fronted/app/
-   # ports:
-  #    - "90:3000"
-   # depends_on:
-    #  - node_app
+  fronted:
+    container_name: fronted
+    restart: always
+    build:
+     context: ./fronted/app/
+    ports:
+      - "90:3000"
+    depends_on:
+      - node_app
 
 volumes:
  nps_data: {}
